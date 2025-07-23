@@ -6,9 +6,7 @@
  * @param b The second integer.
  * @return The smaller of the two integers.
  */
-static uint32_t min(uint32_t a, uint32_t b) {
-  return a < b ? a : b;
-}
+static uint32_t min(uint32_t a, uint32_t b) { return a < b ? a : b; }
 
 /**
  * @brief Appends a single byte to a dynamic byte array.
@@ -20,7 +18,7 @@ static uint32_t min(uint32_t a, uint32_t b) {
  * @return 1 on success, 0 if memory allocation fails.
  */
 static int push_byte(struct ByteArray *arr, uint8_t byte) {
-  arr->len ++;
+  arr->len++;
   uint8_t *ndata = realloc(arr->data, arr->len);
   if (!ndata) {
     arr->len--;
@@ -36,7 +34,6 @@ struct BitWriter *bitwriter_create() {
   if (!w) {
     return NULL;
   }
-
   w->bytes = calloc(1, sizeof(struct ByteArray));
   if (!w->bytes) {
     free(w);
@@ -69,21 +66,18 @@ struct ByteArray *bitwriter_bytes(struct BitWriter *w) {
 }
 
 /**
- * @brief Writes up to 8 bits to the stream.
+ * @brief Writes up to 8 bits to a BitWriter.
  *
- * This is the core internal function that handles packing bits into bytes
- * and manages byte boundaries.
- *
- * @param w The BitWriter instance.
+ * @param w The BitWriter.
  * @param value The byte value containing the bits to write (in the LSB).
- * @param bits The number of bits to write from the value (must be > 0 and <= 8).
+ * @param bits The number of bits to write from the value (must be > 0 and <=
+ * 8).
  * @return 1 on success, 0 on invalid arguments or memory allocation failure.
  */
 static int write_u8(struct BitWriter *w, uint8_t value, uint8_t bits) {
   if (!w || bits == 0 || bits > 8) {
     return 0;
   }
-
   if (w->pos + bits > 8) {
     uint8_t rbits = bits - (8 - w->pos);
     w->current |= value >> rbits;
@@ -103,25 +97,23 @@ static int write_u8(struct BitWriter *w, uint8_t value, uint8_t bits) {
   return 1;
 }
 
-int bitwriter_write(struct BitWriter *w, struct ByteArray *bytes, uint32_t bits) {
-    if (!w || !w->bytes || !bytes) {
+int bitwriter_write(struct BitWriter *w, struct ByteArray *bytes,
+                    uint32_t bits) {
+  if (!w || !w->bytes || !bytes) {
     return 0;
   }
-
-  const size_t total_bits = min(bytes->len * 8, bits);
-  const size_t full_bytes = total_bits / 8;
-
+  const size_t tbits = min(bytes->len * 8, bits);
+  const size_t fbytes = tbits / 8;
   size_t i;
-  for (i = 0; i < full_bytes; i++) {
+  for (i = 0; i < fbytes; i++) {
     if (!write_u8(w, bytes->data[i], 8)) {
       return 0;
     }
   }
-
-  const size_t remaining_bits = total_bits % 8;
-  if (remaining_bits) {
-    uint8_t shifted = bytes->data[full_bytes] >> (8 - remaining_bits);
-    if (!write_u8(w, shifted, remaining_bits)) {
+  const size_t rbits = tbits % 8;
+  if (rbits) {
+    uint8_t shifted = bytes->data[fbytes] >> (8 - rbits);
+    if (!write_u8(w, shifted, rbits)) {
       return 0;
     }
   }

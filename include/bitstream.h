@@ -1,9 +1,9 @@
 #ifndef BITSTREAM_H
 #define BITSTREAM_H
 
+#include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <assert.h>
 
 struct ByteArray {
   uint8_t *data;
@@ -44,7 +44,8 @@ void bitwriter_destroy(struct BitWriter *w);
  * returned pointer; it is still owned by the BitWriter.
  *
  * @param w A pointer to the BitWriter.
- * @return A pointer to the ByteArray containing the written data, or NULL on error.
+ * @return A pointer to the ByteArray containing the written data, or NULL on
+ * error.
  */
 struct ByteArray *bitwriter_bytearray(struct BitWriter *w);
 
@@ -60,6 +61,7 @@ struct ByteArray *bitwriter_bytearray(struct BitWriter *w);
  * @param bits The total number of bits to write from the source array.
  * @return 1 on success, 0 on invalid arguments or memory allocation failure.
  */
-int bitwriter_write(struct BitWriter *w, struct ByteArray *bytes, uint32_t bits);
+int bitwriter_write(struct BitWriter *w, struct ByteArray *bytes,
+                    uint32_t bits);
 
 #endif

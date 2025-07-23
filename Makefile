@@ -6,8 +6,9 @@ OBJ := build
 OUT := $(OBJ)/main
 SRCS := $(wildcard $(SRC)/*.c)
 OBJS := $(patsubst $(SRC)/%.c,$(OBJ)/%.o,$(SRCS))
+HDRS := $(wildcard include/*.h)
 
-.PHONY: all clean
+.PHONY: all clean format
 
 all: $(OUT)
 
@@ -22,3 +23,6 @@ $(OBJ):
 
 clean:
 	rm -rf $(OBJ)
+
+format:
+	clang-format -i $(SRCS) $(HDRS)
