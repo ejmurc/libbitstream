@@ -14,7 +14,7 @@ static int push_byte(struct ByteArray *arr, uint8_t byte) {
   return 1;
 }
 
-struct BitWriter *bitwriter_create() {
+struct BitWriter *bitwriter_malloc() {
   struct BitWriter *w = calloc(1, sizeof(struct BitWriter));
   if (!w) {
     return NULL;
@@ -27,7 +27,7 @@ struct BitWriter *bitwriter_create() {
   return w;
 }
 
-void bitwriter_destroy(struct BitWriter *w) {
+void bitwriter_free(struct BitWriter *w) {
   if (!w) {
     return;
   }
@@ -38,7 +38,7 @@ void bitwriter_destroy(struct BitWriter *w) {
   free(w);
 }
 
-struct ByteArray *bitwriter_bytes(struct BitWriter *w) {
+const struct ByteArray *bitwriter_bytearray(struct BitWriter *w) {
   if (!w) {
     return NULL;
   }
@@ -95,7 +95,8 @@ int bitwriter_write(struct BitWriter *w, struct ByteArray *src, uint64_t bits) {
   return 1;
 }
 
-struct BitReader *bitreader_create(struct ByteArray *bytes) {
+struct BitReader *bitreader_malloc(struct ByteArray *bytes) {
+  if (bytes == NULL) return NULL;
   struct BitReader *r = calloc(1, sizeof(struct BitReader));
   if (!r) {
     return NULL;
@@ -104,15 +105,10 @@ struct BitReader *bitreader_create(struct ByteArray *bytes) {
   return r;
 }
 
-void bitreader_destroy(struct BitReader *r) {
-  if (!r) {
-    return;
+void bitreader_free(struct BitReader *r) {
+  if (r) {
+    free(r);
   }
-  if (r->bytes) {
-    free(r->bytes->data);
-    free(r->bytes);
-  }
-  free(r);
 }
 
 struct ByteArray *bitreader_read(struct BitReader *r, uint64_t bits) {

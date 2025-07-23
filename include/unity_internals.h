@@ -201,8 +201,9 @@ typedef signed long UNITY_INT32;
 /* No 64-bit Support */
 typedef UNITY_UINT32 UNITY_UINT;
 typedef UNITY_INT32 UNITY_INT;
-#define UNITY_MAX_NIBBLES (8) /* Maximum number of nibbles in a UNITY_(U)INT \
-                               */
+#define UNITY_MAX_NIBBLES                            \
+  (8) /* Maximum number of nibbles in a UNITY_(U)INT \
+       */
 #else
 /* 64-bit Support */
 #if (UNITY_LONG_WIDTH == 32)
@@ -216,8 +217,9 @@ typedef signed long UNITY_INT64;
 #endif
 typedef UNITY_UINT64 UNITY_UINT;
 typedef UNITY_INT64 UNITY_INT;
-#define UNITY_MAX_NIBBLES (16) /* Maximum number of nibbles in a UNITY_(U)INT \
-                                */
+#define UNITY_MAX_NIBBLES                             \
+  (16) /* Maximum number of nibbles in a UNITY_(U)INT \
+        */
 #endif
 
 /*-------------------------------------------------------
