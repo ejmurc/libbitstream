@@ -7,13 +7,19 @@
 
 struct ByteArray {
   uint8_t *data;
-  size_t len;
+  uint64_t len;
 };
 
 struct BitWriter {
   struct ByteArray *bytes;
   uint8_t current;
-  uint8_t pos;
+  uint8_t bit;
+};
+
+struct BitReader {
+  struct ByteArray *bytes;
+  uint64_t byte;
+  uint8_t bit;
 };
 
 /**
@@ -50,7 +56,7 @@ void bitwriter_destroy(struct BitWriter *w);
 struct ByteArray *bitwriter_bytearray(struct BitWriter *w);
 
 /**
- * @brief Writes a specified number of bits from a source byte array.
+ * @brief Writes a specified number of bytes / bits from a source byte array.
  *
  * Iterates through the source bytes and writes them to the bitstream.
  * It handles writing full bytes efficiently and then any remaining bits
@@ -61,7 +67,33 @@ struct ByteArray *bitwriter_bytearray(struct BitWriter *w);
  * @param bits The total number of bits to write from the source array.
  * @return 1 on success, 0 on invalid arguments or memory allocation failure.
  */
-int bitwriter_write(struct BitWriter *w, struct ByteArray *bytes,
-                    uint32_t bits);
+int bitwriter_write(struct BitWriter *w, struct ByteArray *src, uint64_t bits);
+
+/**
+ * @brief Creates a BitReader from a ByteArray.
+ *
+ * @param bytes Pointer to the ByteArray to read from.
+ * @return A new BitReader instance, or NULL on failure.
+ */
+struct BitReader *bitreader_create(struct ByteArray *bytes);
+
+/**
+ * @brief Frees a BitReader instance.
+ *
+ * @param r Pointer to the BitReader to destroy.
+ */
+void bitreader_destroy(struct BitReader *r);
+
+/**
+ * @brief Reads bits from the BitReader.
+ *
+ * Reads bits in MSB-first order, starting at the current position. Advances the
+ * read position accordingly.
+ *
+ * @param r The BitReader instance.
+ * @param bits Number of bits to read
+ * @return ByteArray of the bits read, pad right on success, NULL on failure.
+ */
+struct ByteArray *bitreader_read(struct BitReader *r, uint64_t bits);
 
 #endif
