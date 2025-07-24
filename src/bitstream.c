@@ -54,21 +54,26 @@ static int write_u8(struct BitWriter *w, uint8_t value, uint8_t bits) {
   if (!w || bits == 0 || bits > 8) {
     return 0;
   }
-  if (w->bit + bits > 8) {
-    uint8_t rbits = bits - (8 - w->bit);
-    w->current |= value >> rbits;
-    if (!push_byte(w->bytes, w->current)) return 0;
-    w->current = (value & ((1 << rbits) - 1)) << (8 - rbits);
-    w->bit = rbits;
-  } else {
-    uint8_t shift = 8 - w->bit - bits;
-    w->current |= (value & ((1 << bits) - 1)) << shift;
+  // 01000010
+  // &
+  // 00011111
+  // 00000010
+  value &= (1 << bits) - 1;  // 0.repeat(8-bits) + 1.repeat(bits)
+  if (w->bit + bits <= 8) {
+    w->current |= value << w->bit;
     w->bit += bits;
     if (w->bit == 8) {
       if (!push_byte(w->bytes, w->current)) return 0;
       w->current = 0;
       w->bit = 0;
     }
+  } else {
+    uint8_t nbits = 8 - w->bit;
+    uint8_t mask = (1 << nbits) - 1;
+    w->current |= (value & mask) << w->bit;
+    if (!push_byte(w->bytes, w->current)) return 0;
+    w->current = value >> nbits;
+    w->bit = bits - nbits;
   }
   return 1;
 }
