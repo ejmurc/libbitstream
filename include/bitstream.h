@@ -6,9 +6,10 @@
 struct BitWriter {
   uint8_t *data;
   uint64_t capacity;
-  uint64_t length;
+  uint64_t byte;
   uint8_t bit;
 };
+
 struct BitReader {
   const uint8_t *data;
   uint64_t length;
@@ -34,6 +35,13 @@ void bitwriter_init(struct BitWriter *w, uint8_t *buffer, uint64_t capacity);
  */
 int bitwriter_write(struct BitWriter *w, const uint8_t *src,
                     uint64_t src_capacity, uint64_t bits);
+
+/**
+ * @brief Get number of bytes written (including partial bytes).
+ * @param w Bit writer
+ * @return Total bytes containing data
+ */
+uint64_t bitwriter_length(struct BitWriter *w);
 
 /**
  * @brief Initialize a bit reader with a buffer.
