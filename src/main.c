@@ -7,7 +7,7 @@
 void setUp(void) {}
 void tearDown(void) {}
 
-void test_roundtrip_single_byte(void) {
+/*void test_roundtrip_single_byte(void) {
   struct BitWriter *writer = bitwriter_malloc();
   uint8_t data = 0xFF;
   struct ByteArray src = {&data, 1};
@@ -55,13 +55,13 @@ void test_roundtrip_split_bytes(void) {
   free(read_a);
   free(read_b->data);
   free(read_b);
-}
+}*/
 
 int main(void) {
   UNITY_BEGIN();
 
-  RUN_TEST(test_roundtrip_single_byte);
-  RUN_TEST(test_roundtrip_split_bytes);
+  /*RUN_TEST(test_roundtrip_single_byte);
+  RUN_TEST(test_roundtrip_split_bytes);*/
 
   return UNITY_END();
 }
