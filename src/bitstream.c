@@ -54,11 +54,7 @@ static int write_u8(struct BitWriter *w, uint8_t value, uint8_t bits) {
   if (!w || bits == 0 || bits > 8) {
     return 0;
   }
-  // 01000010
-  // &
-  // 00011111
-  // 00000010
-  value &= (1 << bits) - 1;  // 0.repeat(8-bits) + 1.repeat(bits)
+  value &= (1 << bits) - 1;
   if (w->bit + bits <= 8) {
     w->current |= value << w->bit;
     w->bit += bits;
