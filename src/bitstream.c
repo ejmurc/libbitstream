@@ -1,7 +1,5 @@
 #include "bitstream.h"
 
-static uint32_t min(uint32_t a, uint32_t b) { return a < b ? a : b; }
-
 void bitwriter_init(struct BitWriter *w, uint8_t *buffer, uint64_t capacity) {
   if (!w || !buffer || capacity == 0) return;
   w->data = buffer;
@@ -49,7 +47,7 @@ int bitwriter_write(struct BitWriter *w, const uint8_t *src,
   if (bits == 0) {
     return 0;
   }
-  const uint64_t tbits = min(src_capacity * 8, bits);
+  const uint64_t tbits = src_capacity * 8 < bits ? src_capacity * 8 : bits;
   const uint64_t fbytes = tbits / 8;
   uint64_t i;
   for (i = 0; i < fbytes; i++) {
@@ -96,7 +94,7 @@ int bitreader_read(struct BitReader *r, uint8_t *dst, uint64_t dst_capacity,
   memset(dst, 0, (bits + 7) / 8);
   uint64_t processed = 0;
   while (processed < bits) {
-    uint8_t bitc = min(bits - processed, 8 - r->bit);
+    uint8_t bitc = bits - processed < 8 - r->bit ? bits - processed : 8 - r->bit;
     uint8_t mask = ((1 << bitc) - 1) << (8 - r->bit - bitc);
     uint8_t data = (r->data[r->byte] & mask) >> (8 - r->bit - bitc);
     uint64_t out_offset = bits - processed - bitc;
