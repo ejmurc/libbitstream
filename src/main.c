@@ -59,11 +59,11 @@ void test_uint8_cast_unaligned_roundtrip(void) {
     uint8_t alignment_read;
     TEST_ASSERT_EQUAL_INT(0, bitreader_read(&reader, &alignment_read, 1, 3));
 
-    TEST_ASSERT_EQUAL_UINT8(alignment_byte, alignment_read); // Should be equivalent since only bottom 3 bits written
+    TEST_ASSERT_EQUAL_UINT8(alignment_byte, alignment_read);
     
     uint8_t read_buffer;
     TEST_ASSERT_EQUAL_INT(0, bitreader_read(&reader, &read_buffer, 1, 8));
-    TEST_ASSERT_EQUAL_UINT8(value, read_buffer); // Fails, Expected 18 Was 66
+    TEST_ASSERT_EQUAL_UINT8(value, read_buffer);
 }
 
 int main() {
