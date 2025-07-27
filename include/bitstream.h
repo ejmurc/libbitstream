@@ -2,6 +2,7 @@
 #define BITSTREAM_H
 
 #include <stdint.h>
+#include <string.h>
 
 struct BitWriter {
   uint8_t *data;
