@@ -1,7 +1,7 @@
 # libbitstream
 **Zero-allocation bitstream library in C**
 
-`libbitstream` provides a simple, fast, and zero-allocation API for reading and writing arbitrary-length bit sequences from byte-aligned buffers. Ideal for embedded systems, custom binary protocols, and performance-critical applications.
+`libbitstream` is a zero-allocation bitstream library in C that reads and writes arbitrary-length fields to byte-aligned buffers. Ideal for custom binary protocols, serialization formats, and embedded systems.
 
 ## Features
 - Zero heap allocations — you manage the memory
