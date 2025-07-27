@@ -1,7 +1,5 @@
 #include "bitstream.h"
 
-#include <stdio.h>
-
 static uint32_t min(uint32_t a, uint32_t b) { return a < b ? a : b; }
 
 void bitwriter_init(struct BitWriter *w, uint8_t *buffer, uint64_t capacity) {
